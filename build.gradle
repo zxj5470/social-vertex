@@ -1,0 +1,68 @@
+group 'cn.net.polyglot'
+version '0.3'
+
+buildscript {
+    ext.kotlin_version = '1.3.0'
+    ext.vertx_version = '3.6.2'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "io.vertx:vertx-core:$vertx_version"
+    compile "io.vertx:vertx-web:$vertx_version"
+    compile "io.vertx:vertx-config:$vertx_version"
+    compile "io.vertx:vertx-lang-groovy:$vertx_version"
+    compile "io.vertx:vertx-lang-kotlin:$vertx_version"
+    compile "io.vertx:vertx-lang-kotlin-coroutines:$vertx_version"
+    compile "io.vertx:vertx-web-client:$vertx_version"
+    compile "io.vertx:vertx-web-templ-thymeleaf:$vertx_version"
+    compile "com.google.guava:guava:27.0-jre"
+    compile "org.slf4j:slf4j-api:1.7.25"
+
+    testCompile "org.awaitility:awaitility:3.1.2"
+    testCompile "io.vertx:vertx-unit:$vertx_version"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += ['src/main/java', 'src/main/kotlin']
+        }
+        resources {
+            srcDirs += ['src/main/groovy', 'src/main/resources']
+        }
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "io.vertx.core.Launcher",
+                "Main-Verticle": "cn/net/polyglot/main_verticle.groovy"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
