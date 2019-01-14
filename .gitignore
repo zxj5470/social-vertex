@@ -3,7 +3,12 @@
 # maven
 target/
 
+# gradle
+.gradle/
+build/
+
 .vertx/
+.settings/
 
 # app data dir
 social-vertex/
